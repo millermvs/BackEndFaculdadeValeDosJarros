@@ -6,12 +6,12 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.valedosjarros.domain.entities.Curso;
+import br.com.valedosjarros.domain.entities.Disciplina;
 
 @Repository
-public interface CursoRepository extends JpaRepository<Curso, Long> {
+public interface DisciplinaRepository extends JpaRepository<Disciplina, Long>{
 	
-	@EntityGraph(attributePaths = "departamento")
-	Optional<Curso> findByIdCurso(Long id);
+	@EntityGraph(attributePaths = "curso")
+	Optional<Disciplina> findByIdDisciplina(Long id);
 
 }
