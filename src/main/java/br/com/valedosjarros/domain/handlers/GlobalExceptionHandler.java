@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import br.com.valedosjarros.domain.exceptions.CursoNaoEncontradoException;
 import br.com.valedosjarros.domain.exceptions.DepartamentoNaoEncontradoException;
 import br.com.valedosjarros.domain.exceptions.DisciplinaNaoEncontradaException;
+import br.com.valedosjarros.domain.exceptions.NomeDaSalaJaExisteException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -26,6 +27,12 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(status.value()).body(body);
 	}
 
+	@ExceptionHandler(NomeDaSalaJaExisteException.class)
+	public ResponseEntity<Object> handlerNomeDaSalaJaExiste(NomeDaSalaJaExisteException ex){
+		var response = criaResponse(HttpStatus.CONFLICT, ex);
+		return response;
+	}
+	
 	@ExceptionHandler(CursoNaoEncontradoException.class)
 	public ResponseEntity<Object> handlerCursoNaoEncontrado(CursoNaoEncontradoException ex) {
 		var response = criaResponse(HttpStatus.NOT_FOUND, ex);
@@ -43,4 +50,5 @@ public class GlobalExceptionHandler {
 		var response = criaResponse(HttpStatus.NOT_FOUND, ex);
 		return response;
 	}
+	
 }
