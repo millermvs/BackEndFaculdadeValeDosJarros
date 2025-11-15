@@ -1,128 +1,171 @@
-# Faculdade Vale dos Jarros — Modelo Acadêmico (Projeto de Estudo com Spring Boot + PostgreSQL)
+# Faculdade Vale dos Jarros - Sistema Acadêmico (Backend)
 
-Este projeto é parte do meu treino pessoal em **modelagem de dados**, **Spring Boot**, **Spring Data JPA**, **PostgreSQL** e **boas práticas de arquitetura**.  
-A ideia é transformar um *minimundo* em um projeto completo com entidades, relacionamentos, serviços, consultas e integração com banco de dados.
+Este projeto é um backend em **Spring Boot 3.5.7** com **Java 21**, modelando os principais elementos de uma faculdade fictícia chamada *Faculdade Vale dos Jarros*, conforme o minimundo proposto.
 
----
+O sistema está sendo desenvolvido com foco em:
 
-## 🎯 Objetivo do Projeto
-
-Modelar e implementar, em Java + Spring Boot, o sistema acadêmico da **Faculdade Vale dos Jarros**, incluindo:
-
-- Departamentos  
-- Cursos  
-- Professores  
-- Salas  
-- Disciplinas  
-- Alunos  
-- Armários  
-- Matrículas  
-- Biblioteca (livros, autores, empréstimos)  
-- Laboratório de redes (equipamentos, técnicos, turmas)  
-- Projetos finais (grupos, orientadores)
-
-O foco inicial é **criar o modelo conceitual e lógico**, e depois construir gradualmente todas as entidades e relacionamentos usando JPA.
+- Arquitetura limpa  
+- Modelagem de domínio correta  
+- Relacionamentos JPA bem estruturados  
+- DTOs isolando entidades  
+- Boas práticas de Service, Repository e Controller  
+- Uso consistente de LAZY, EntityGraph e exceções customizadas  
 
 ---
 
-## 🧩 Tecnologias Utilizadas
+# 📦 Estrutura do Projeto
+
+```
+application/        -> Controllers (entrada da API)
+domain/
+  dtos/             -> DTOs de request e response
+  entities/         -> Entidades JPA
+  exceptions/       -> Exceções customizadas
+  handlers/         -> GlobalExceptionHandler
+  services/         -> Regras de negócio
+infrastructure/
+  repositories/     -> Interfaces JPA
+```
+
+---
+
+# 🧠 Modelagem Implementada Até Agora
+
+## 🏢 Departamento
+- Cada departamento pode ter vários cursos.
+- Cada departamento pode ter vários professores.
+- Relacionamentos:
+  - **1:N com Curso**
+  - **1:N com Professor** (usando `Set` para evitar duplicidade)
+- Entidade mantém:
+  ```java
+  @OneToMany(mappedBy = "departamento")
+  private Set<Professor> professores;
+  ```
+
+---
+
+## 👨‍🏫 Professor
+- Cada professor pertence a exatamente um departamento.
+- Relacionamento:
+  - **N:1 com Departamento**
+- Implementações importantes:
+  - Nome formatado com inicial maiúscula no cadastro.
+  - Serviço sincroniza os dois lados da relação:
+    - `professor.setDepartamento(dep)`
+    - `dep.getProfessores().add(professor)`
+  - Repositório com `@EntityGraph` para carregar departamento junto.
+
+Endpoint principal:
+```
+POST /api/v1/professores/cadastrar
+```
+
+---
+
+## 🎓 Curso
+- Cada curso pertence a um departamento.
+- Cada curso possui várias disciplinas.
+- Relacionamentos:
+  - **N:1 com Departamento**
+  - **1:N com Disciplina**
+
+---
+
+## 📘 Disciplina
+- Cada disciplina pertence a um curso.
+- Cada disciplina possui várias turmas.
+- Relacionamentos:
+  - **N:1 com Curso**
+  - **1:N com Turma**
+
+---
+
+## 👥 Turma
+- Cada turma pertence a uma disciplina.
+- Relacionamento:
+  - **N:1 com Disciplina**
+
+Endpoint principal:
+```
+POST /api/v1/turmas/cadastrar
+```
+
+---
+
+# 🔧 Tecnologias Utilizadas
 
 - **Java 21**
 - **Spring Boot 3.x**
 - **Spring Data JPA**
-- **PostgreSQL 15+**
-- **Hibernate**
+- **PostgreSQL**
+- **Hibernate EntityGraph**
 - **Lombok**
-- **Maven**
+- **DTO Pattern**
+- **Arquitetura em camadas**
+- **@Transactional nas operações de escrita**
 
 ---
 
-## 🗄️ Configuração do Banco de Dados
+# ⚠️ Tratamento Global de Exceções
 
-O projeto usa PostgreSQL local.  
+Implementado com:
 
-
-### 📝 Observações
-- É necessário ter um banco chamado **db_faculdade_vale_dos_jarros** criado.
-- O usuário **postgres** deve ter acesso total ao banco.
-- `ddl-auto=update` é usado **apenas para ambiente local de estudo**.
-
----
-
-## 🏗️ Estrutura do Projeto (em evolução)
-
-```
-br.com.valedosjarros
- └── domain
-      ├── entities         ← todas as entidades JPA
-      ├── dtos             ← DTOs (futuro)
-      ├── services         ← lógica de negócio
-      └── repositories     ← interfaces do Spring Data
+```java
+@ControllerAdvice
+public class GlobalExceptionHandler {
 ```
 
----
+Exceções mapeadas até agora:
 
-## 📌 Relacionamentos já implementados
+- `DepartamentoNaoEncontradoException`
+- `CursoNaoEncontradoException`
+- `DisciplinaNaoEncontradaException`
 
-### ✔ Departamento (1) → Cursos (N)
-
-- Departamento = lado **pai**
-- Curso = lado **filho** (contém FK `id_departamento`)
-- `mappedBy` utilizado corretamente no pai
-- `fetch = LAZY` em todas as associações
-
----
-
-## 🎓 Minimundo (Resumo)
-
-Este projeto se baseia no seguinte cenário:
-
-- Cada **Aluno** possui **um único Armário**.
-- Cada **Professor** ocupa **uma Sala exclusiva**.
-- Cada **Disciplina** pertence a **um Curso** e é ministrada por **um único Professor**.
-- **Alunos** podem se matricular em muitas disciplinas, com histórico de notas.
-- A **Biblioteca** registra empréstimos de **Exemplares** (livros) para alunos.
-- No laboratório, equipamentos críticos têm **técnico exclusivo**, enquanto outros são compartilhados por turmas.
-- Projetos finais envolvem **Grupos**, **Orientadores** e **Alunos participantes**.
+Retorno padronizado:
+- timestamp
+- status
+- message
 
 ---
 
-## 🚀 Como rodar o projeto
+# 🚀 Endpoints Implementados
 
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/SEU-USUARIO/SEU-REPO.git
-   ```
-2. Configure o PostgreSQL conforme o application.properties.
-3. Rode:
-   ```bash
-   mvn spring-boot:run
-   ```
+## Professores
+- `POST /api/v1/professores/cadastrar`
 
----
+## Departamentos
+- `POST /api/v1/departamentos/cadastrar` *(já implementado antes)*
 
-## 📅 Status Atual do Projeto
+## Cursos
+- `POST /api/v1/cursos/cadastrar`
 
-- [x] Criação da estrutura base  
-- [x] Configuração do banco  
-- [x] Entidades iniciais (Departamento e Curso)  
-- [ ] Relacionamentos com Professor  
-- [ ] Modelagem da Biblioteca  
-- [ ] Modelagem do Laboratório  
-- [ ] Modelagem dos Projetos Finais  
-- [ ] Serviços e Regras de Negócio  
-- [ ] Controllers e Endpoints  
-- [ ] Documentação da API (Swagger)
+## Disciplinas
+- `POST /api/v1/disciplinas/cadastrar`
+
+## Turmas
+- `POST /api/v1/turmas/cadastrar`
 
 ---
 
-## 🤝 Contribuição
-
-Projeto pessoal, mas aberto para melhorias, dúvidas e sugestões.
+# 📝 Próximos Passos
+- Criar entidade Sala (1:1 com Professor)
+- Criar GET com DTOs enriquecidos usando EntityGraph
+- Criar módulo Biblioteca, Equipamentos e Projetos (conforme minimundo)
+- Adicionar validações Bean Validation nos DTOs
 
 ---
 
-## 📧 Contato
+# 📌 Objetivo do Projeto
+Este repositório serve como:
 
-Caso queira trocar ideias sobre arquitetura, JPA, modelagem ou Spring:  
+- estudo prático de Spring Boot + JPA,
+- desenvolvimento de um backend completo baseado em regras reais,
+- consolidar aprendizado sobre modelagem relacional,
+- demonstrar habilidades para portfólio.
+
+---
+
+# 👤 Autor
 **Miller Santos**
+Desenvolvedor Backend em formação — focado em Java, Spring Boot e modelagem limpa.

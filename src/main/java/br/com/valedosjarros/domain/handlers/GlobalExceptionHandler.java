@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import br.com.valedosjarros.domain.exceptions.CursoNaoEncontradoException;
 import br.com.valedosjarros.domain.exceptions.DepartamentoNaoEncontradoException;
+import br.com.valedosjarros.domain.exceptions.DisciplinaNaoEncontradaException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -33,6 +34,12 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(DepartamentoNaoEncontradoException.class)
 	public ResponseEntity<Object> handlerDepartamentoNaoEncontrado(DepartamentoNaoEncontradoException ex) {
+		var response = criaResponse(HttpStatus.NOT_FOUND, ex);
+		return response;
+	}
+	
+	@ExceptionHandler(DisciplinaNaoEncontradaException.class)
+	public ResponseEntity<Object> handlerDisciplinaNaoEncontrada(DisciplinaNaoEncontradaException ex){
 		var response = criaResponse(HttpStatus.NOT_FOUND, ex);
 		return response;
 	}

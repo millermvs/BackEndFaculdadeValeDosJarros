@@ -15,7 +15,7 @@ import jakarta.transaction.Transactional;
 public class DisciplinaService {
 
 	@Autowired
-	private DisciplinaRepository disciplinaResRepository;
+	private DisciplinaRepository disciplinaRepository;
 
 	@Autowired
 	private CursoRepository cursoRepository;
@@ -26,18 +26,21 @@ public class DisciplinaService {
 		var cursoFound = cursoRepository.findByIdCurso(request.getIdCurso())
 				.orElseThrow(CursoNaoEncontradoException::new);
 
+		var nomeDisciplinaMinusculo = request.getNomeDisciplina().toLowerCase();
+		var nomeDisciplinaFormatado = nomeDisciplinaMinusculo.substring(0, 1).toUpperCase()
+				+ nomeDisciplinaMinusculo.substring(1);
+
 		var disciplinaNova = new Disciplina();
-		disciplinaNova.setNomeDisciplina(request.getNomeDisciplina());
+		disciplinaNova.setNomeDisciplina(nomeDisciplinaFormatado);
 		disciplinaNova.setCurso(cursoFound);
 		cursoFound.getDisciplinas().add(disciplinaNova);
-		disciplinaResRepository.save(disciplinaNova);
+		disciplinaRepository.save(disciplinaNova);
 
 		var response = new CadastrarDisciplinaResponseDto();
 		response.setId(disciplinaNova.getIdDisciplina());
 		response.setNomeDisciplina(disciplinaNova.getNomeDisciplina());
 		response.setNomeCurso(disciplinaNova.getCurso().getNomeCurso());
-		response.setResposta("Disciplina " + disciplinaNova.getNomeDisciplina() + " para o curso de "
-				+ response.getNomeCurso() + " foi cadastrada.");
+		response.setResposta("Disciplina " + disciplinaNova.getNomeDisciplina() + " foi cadastrada.");
 
 		return response;
 	}
