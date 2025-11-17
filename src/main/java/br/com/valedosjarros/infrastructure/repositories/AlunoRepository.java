@@ -11,6 +11,10 @@ import br.com.valedosjarros.domain.entities.Aluno;
 @Repository
 public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 
-	@EntityGraph(attributePaths = "matricula")
+	@EntityGraph(attributePaths = "armarioAluno")
+	Optional<Aluno> findByCpf(String cpf);
+	
+	
+	@EntityGraph(attributePaths = "matriculas")
 	Optional<Aluno> findByIdAluno(Long id);
 }

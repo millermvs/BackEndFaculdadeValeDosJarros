@@ -9,6 +9,7 @@ public class CadastrarAlunoResponseDto {
 	
 	private Long id;
 	private String nome;
+	private String cpf;
 	private String resposta;
 	
 

@@ -1,12 +1,15 @@
 package br.com.valedosjarros.domain.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -28,12 +31,17 @@ public class Aluno {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@EqualsAndHashCode.Include
 	private Long idAluno;
-	
+
 	@Column
 	private String nome;
+	
+	@Column(unique = true, nullable = false)
+	private String cpf;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_matricula", referencedColumnName = "idMatricula")
-	private Matricula matricula;
+	@OneToMany(mappedBy = "aluno", fetch = FetchType.LAZY)
+	private Set<Matricula> matriculas = new HashSet<Matricula>();
+	
+	@OneToOne(mappedBy = "aluno", fetch = FetchType.LAZY)
+	private ArmarioAluno armarioAluno;
 
 }

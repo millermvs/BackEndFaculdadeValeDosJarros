@@ -9,9 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import br.com.valedosjarros.domain.exceptions.CpfJaCadastradoException;
 import br.com.valedosjarros.domain.exceptions.CursoNaoEncontradoException;
 import br.com.valedosjarros.domain.exceptions.DepartamentoNaoEncontradoException;
 import br.com.valedosjarros.domain.exceptions.DisciplinaNaoEncontradaException;
+import br.com.valedosjarros.domain.exceptions.NomeArmarioJaExisteException;
 import br.com.valedosjarros.domain.exceptions.NomeDaSalaJaExisteException;
 
 @ControllerAdvice
@@ -51,4 +53,15 @@ public class GlobalExceptionHandler {
 		return response;
 	}
 	
+	@ExceptionHandler(NomeArmarioJaExisteException.class)
+	public ResponseEntity<Object> handlerNomeArmarioJaExiste(NomeArmarioJaExisteException ex){
+		var response = criaResponse(HttpStatus.CONFLICT, ex);
+		return response;
+	}
+	
+	@ExceptionHandler(CpfJaCadastradoException.class)
+	public ResponseEntity<Object> handlerCpfJaCadastrado(CpfJaCadastradoException ex){
+		var response = criaResponse(HttpStatus.CONFLICT, ex);
+		return response;
+	}
 }

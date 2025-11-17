@@ -1,14 +1,13 @@
 package br.com.valedosjarros.domain.entities;
 
-import java.time.LocalDate;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -18,30 +17,22 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
 @Getter
+@Setter
 @Entity
-@Table(name = "matriculas")
+@Table(name = "armarios")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Matricula {
+public class ArmarioAluno {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@EqualsAndHashCode.Include
-	private Long idMatricula;
-
-	private LocalDate dataInscricao;
-
-	private Double notaFinal;
-
-	@ManyToOne(fetch = FetchType.LAZY)
+	private Integer idArmario;
+	
+	@Column
+	private String nomeArmario;
+	
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_aluno", referencedColumnName = "idAluno")
 	private Aluno aluno;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_turma", referencedColumnName = "idTurma")
-	private Turma turma;
-
-//	private List<Disciplina> disciplinas;
-
 }

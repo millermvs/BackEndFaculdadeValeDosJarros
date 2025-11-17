@@ -42,5 +42,9 @@ public class Disciplina {
 	
 	@OneToMany(mappedBy = "disciplina", fetch = FetchType.LAZY)
 	private List<Turma> turmas = new ArrayList<Turma>();
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_professor", referencedColumnName = "idProfessor")
+	private Professor professor;
 
 }
