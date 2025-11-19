@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class CadastrarLivroRequestDto {
 
-	@NotBlank
+	@NotBlank(message = "Campo obrigatório.")
 	@Size(min = 1, max = 50, message = "O nome do livro deve ter entre 1 e 50 caracteres.")
 	private String nomeLivro;
 
@@ -20,7 +20,7 @@ public class CadastrarLivroRequestDto {
 	@Size(min = 1, message = "O livro deve ter pelo menos 1 autor.")
 	private List<@NotNull(message = "O nome do autor é obrigatório") Long> idAutores;
 
-	@NotNull
+	@NotNull(message = "Campo obrigatório.")
 	private Long idBiblioteca;
 
 }

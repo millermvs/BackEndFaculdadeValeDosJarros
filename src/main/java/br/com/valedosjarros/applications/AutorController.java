@@ -23,6 +23,6 @@ public class AutorController {
 	@PostMapping("cadastrar")
 	public ResponseEntity<CadastrarAutorResponseDto> post(@Valid @RequestBody CadastrarAutorRequestDto request) {
 		var response = autorService.cadastrarAutor(request);
-		return ResponseEntity.status(HttpStatus.CREATED.value()).body(response);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 }
