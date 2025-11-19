@@ -6,7 +6,7 @@ public class BibliotecaNomeJaCadastradoException extends RuntimeException{
 	
 	@Override
 	public String getMessage() {
-		return "Nome já da biblioteca já existe";
+		return "Nome da biblioteca já existe";
 	}
 
 }

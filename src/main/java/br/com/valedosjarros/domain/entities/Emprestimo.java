@@ -1,7 +1,6 @@
 package br.com.valedosjarros.domain.entities;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,8 +8,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -20,31 +19,33 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
 @Getter
+@Setter
 @Entity
-@Table(name = "alunos")
+@Table(name = "emprestimos")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Aluno {
+public class Emprestimo {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@EqualsAndHashCode.Include
-	private Long idAluno;
+	private Long idEmprestimo;
+
+	@Column(nullable = false)
+	private LocalDate dataEmprestimo;
+
+	@Column(nullable = false)
+	private LocalDate dataPrevistaDevolucao;
 
 	@Column
-	private String nome;
-	
-	@Column(unique = true, nullable = false)
-	private String cpf;
+	private LocalDate dataDevolucao;
 
-	@OneToMany(mappedBy = "aluno", fetch = FetchType.LAZY)
-	private Set<Matricula> matriculas = new HashSet<Matricula>();
-	
-	@OneToOne(mappedBy = "aluno", fetch = FetchType.LAZY)
-	private ArmarioAluno armarioAluno;
-	
-	@OneToMany(mappedBy = "aluno", fetch = FetchType.LAZY)
-	private Set<Emprestimo> emprestimo = new HashSet<Emprestimo>();
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_livro", referencedColumnName = "idLivro")
+	private Livro livro;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_aluno", referencedColumnName = "idAluno")
+	private Aluno aluno;
 
 }
