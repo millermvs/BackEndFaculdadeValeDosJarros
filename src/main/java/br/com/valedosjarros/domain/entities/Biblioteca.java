@@ -1,17 +1,12 @@
 package br.com.valedosjarros.domain.entities;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -20,29 +15,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
-@Table(name = "departamentos")
+@Table(name = "bibliotecas")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Departamento {
+public class Biblioteca {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@EqualsAndHashCode.Include
-	private Long idDepartamento;
+	private Long idBiblioteca;
 
-	@Column
-	private String nomeDepartamento;
+	@Column(length = 30, nullable = false, unique = true)
+	private String nomeBiblioteca;
 
-	@OneToMany(mappedBy = "departamento", fetch = FetchType.LAZY)
-	private List<Curso> cursos = new ArrayList<Curso>();
-
-	@OneToMany(mappedBy = "departamento", fetch = FetchType.LAZY)
-	private Set<Professor> professores = new HashSet<Professor>();
-
-	@OneToOne(mappedBy = "departamento", fetch = FetchType.LAZY)
-	private Biblioteca biblioteca;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_departamento", referencedColumnName = "idDepartamento", unique = true)
+	private Departamento departamento;
 }

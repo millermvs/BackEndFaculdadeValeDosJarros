@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import br.com.valedosjarros.domain.exceptions.ArmarioNaoEncontradoException;
 import br.com.valedosjarros.domain.exceptions.ArmarioOcupadoException;
+import br.com.valedosjarros.domain.exceptions.BibliotecaNomeJaCadastradoException;
 import br.com.valedosjarros.domain.exceptions.CpfJaCadastradoException;
 import br.com.valedosjarros.domain.exceptions.CursoNaoEncontradoException;
 import br.com.valedosjarros.domain.exceptions.DepartamentoNaoEncontradoException;
@@ -76,6 +77,12 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(ArmarioNaoEncontradoException.class)
 	public ResponseEntity<Object> handlerArmarioNaoEncontrado(ArmarioNaoEncontradoException ex){
 		var response = criaResponse(HttpStatus.NOT_FOUND, ex);
+		return response;
+	}
+	
+	@ExceptionHandler(BibliotecaNomeJaCadastradoException.class)
+	public ResponseEntity<Object> handlerBibliotecaNomeJaCadastrado(BibliotecaNomeJaCadastradoException ex){
+		var response = criaResponse(HttpStatus.CONFLICT, ex);
 		return response;
 	}
 }
