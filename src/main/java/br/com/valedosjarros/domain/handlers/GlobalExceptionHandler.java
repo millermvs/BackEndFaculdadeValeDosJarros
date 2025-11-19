@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import br.com.valedosjarros.domain.exceptions.ArmarioNaoEncontradoException;
 import br.com.valedosjarros.domain.exceptions.ArmarioOcupadoException;
+import br.com.valedosjarros.domain.exceptions.BibliotecaNaoEncontradaException;
 import br.com.valedosjarros.domain.exceptions.BibliotecaNomeJaCadastradoException;
 import br.com.valedosjarros.domain.exceptions.CpfJaCadastradoException;
 import br.com.valedosjarros.domain.exceptions.CursoNaoEncontradoException;
@@ -33,11 +34,11 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(NomeDaSalaJaExisteException.class)
-	public ResponseEntity<Object> handlerNomeDaSalaJaExiste(NomeDaSalaJaExisteException ex){
+	public ResponseEntity<Object> handlerNomeDaSalaJaExiste(NomeDaSalaJaExisteException ex) {
 		var response = criaResponse(HttpStatus.CONFLICT, ex);
 		return response;
 	}
-	
+
 	@ExceptionHandler(CursoNaoEncontradoException.class)
 	public ResponseEntity<Object> handlerCursoNaoEncontrado(CursoNaoEncontradoException ex) {
 		var response = criaResponse(HttpStatus.NOT_FOUND, ex);
@@ -49,40 +50,46 @@ public class GlobalExceptionHandler {
 		var response = criaResponse(HttpStatus.NOT_FOUND, ex);
 		return response;
 	}
-	
+
 	@ExceptionHandler(DisciplinaNaoEncontradaException.class)
-	public ResponseEntity<Object> handlerDisciplinaNaoEncontrada(DisciplinaNaoEncontradaException ex){
+	public ResponseEntity<Object> handlerDisciplinaNaoEncontrada(DisciplinaNaoEncontradaException ex) {
 		var response = criaResponse(HttpStatus.NOT_FOUND, ex);
 		return response;
 	}
-	
+
 	@ExceptionHandler(NomeArmarioJaExisteException.class)
-	public ResponseEntity<Object> handlerNomeArmarioJaExiste(NomeArmarioJaExisteException ex){
+	public ResponseEntity<Object> handlerNomeArmarioJaExiste(NomeArmarioJaExisteException ex) {
 		var response = criaResponse(HttpStatus.CONFLICT, ex);
 		return response;
 	}
-	
+
 	@ExceptionHandler(CpfJaCadastradoException.class)
-	public ResponseEntity<Object> handlerCpfJaCadastrado(CpfJaCadastradoException ex){
+	public ResponseEntity<Object> handlerCpfJaCadastrado(CpfJaCadastradoException ex) {
 		var response = criaResponse(HttpStatus.CONFLICT, ex);
 		return response;
 	}
-	
+
 	@ExceptionHandler(ArmarioOcupadoException.class)
-	public ResponseEntity<Object> handlerArmarioOcupado(ArmarioOcupadoException ex){
+	public ResponseEntity<Object> handlerArmarioOcupado(ArmarioOcupadoException ex) {
 		var response = criaResponse(HttpStatus.CONFLICT, ex);
 		return response;
 	}
-	
+
 	@ExceptionHandler(ArmarioNaoEncontradoException.class)
-	public ResponseEntity<Object> handlerArmarioNaoEncontrado(ArmarioNaoEncontradoException ex){
+	public ResponseEntity<Object> handlerArmarioNaoEncontrado(ArmarioNaoEncontradoException ex) {
 		var response = criaResponse(HttpStatus.NOT_FOUND, ex);
 		return response;
 	}
-	
+
 	@ExceptionHandler(BibliotecaNomeJaCadastradoException.class)
-	public ResponseEntity<Object> handlerBibliotecaNomeJaCadastrado(BibliotecaNomeJaCadastradoException ex){
+	public ResponseEntity<Object> handlerBibliotecaNomeJaCadastrado(BibliotecaNomeJaCadastradoException ex) {
 		var response = criaResponse(HttpStatus.CONFLICT, ex);
+		return response;
+	}
+
+	@ExceptionHandler(BibliotecaNaoEncontradaException.class)
+	public ResponseEntity<Object> handlerBibliotecaNaoEncontrada(BibliotecaNaoEncontradaException ex) {
+		var response = criaResponse(HttpStatus.NOT_FOUND, ex);
 		return response;
 	}
 }
